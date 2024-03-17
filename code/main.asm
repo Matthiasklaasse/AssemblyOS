@@ -1,53 +1,39 @@
-org 0x7C00
+	BITS 16
 
-mov ax, 0x03        ; Set video mode 0x03 (80x25 text mode)
-int 0x10            ; BIOS interrupt call to set video mode
+start:
+	mov ax, 07C0h
+    add ax, 288
+	mov ss, ax
+	mov sp, 4096
 
-mov ah, 0x0C        ; AH = 0x0C: write pixel function
-mov al, 0x0F        ; AL = 0x0F: blue color attribute (default background)
-mov bh, 0x00        ; BH = 0x00: display page
-mov cx, 0x0F        ; CX = 0x0F: height of the box
-mov dx, 0x0140      ; DX = 0x0140: starting column and row (80x20 position)
+	mov ax, 07C0h
+	mov ds, ax; veel te moeilijk ben nu al vergeten hoe dit werkte was iets met een stack space LIFO etc.
 
-draw_loop:
-    mov si, 0x0A    ; SI = 0x0A: width of the box
 
-draw_pixel:
-    int 0x10        ; BIOS interrupt call to write pixel
-    dec si
-    jnz draw_pixel  ; Continue drawing pixels until SI becomes zero
+	mov si, text_string ;in si drop je de HEX locatie van de 1ste byte je sting
+	call print_string	; print_string print de str die in si aangewezen word
+	mov si, text_string1
+	call print_string
 
-    dec cx          ; Decrease height
-    jnz draw_loop   ; Continue drawing rows until CX becomes zero
+	jmp $
 
-; Print "Hello, World!"
-mov ah, 0x0E
-mov al, 'H'
-int 0x10
-mov al, 'e'
-int 0x10
-mov al, 'l'
-int 0x10
-mov al, 'l'
-int 0x10
-mov al, 'o'
-int 0x10
-mov al, ','
-int 0x10
-mov al, ' '
-int 0x10
-mov al, 'W'
-int 0x10
-mov al, 'o'
-int 0x10
-mov al, 'r'
-int 0x10
-mov al, 'l'
-int 0x10
-mov al, 'd'
-int 0x10
-mov al, '!'
-int 0x10
+	text_string db 'This is my cool new OS!', 0xd, 0xA
+	text_string1 db 'This is my cool line of code!', 0xd, 0xA
 
-times 510-($-$$) db 0  ; Fill the rest of the boot sector with zeros
-dw 0xAA55              ; Boot signature
+
+print_string:
+	mov ah, 0Eh	    ; ah op 0Eh zetten zet BIOS in text mode
+
+.repeat:
+	lodsb			; lodsb pakt si en gaat 1 byte omhoog in de al register om naar de vogende character van de str te gaan
+	cmp al, 0xA     ; kijk of de al 0xA is wat dat is het einde v de str
+	int 0x10    	; dan printen we de str
+	je .done		; jmp naar done als het echt het eind is
+	jmp .repeat     ; en jmp weer lekker verder
+
+.done:
+	ret             ; return(naar je oude positie)
+
+
+	times 510-($-$$) db 0	; maak de code 512 bytes zodat hij prcies in de bootsector past
+	dw 0xAA55		; aant einde van de code moeten we 0xAA55 hebben da ziiet biosdit als een bootble drive
