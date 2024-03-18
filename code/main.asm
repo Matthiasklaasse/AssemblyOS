@@ -2,7 +2,7 @@
 
 start:
 	mov ax, 07C0h
-    add ax, 288
+    add ax, 288 
 	mov ss, ax
 	mov sp, 4096
 
@@ -24,14 +24,14 @@ start:
 print_string:
 	mov ah, 0Eh	    ; ah op 0Eh zetten zet BIOS in text mode
 
-.repeat:
+.print_string_repeat:
 	lodsb			; lodsb pakt si en gaat 1 byte omhoog in de al register om naar de vogende character van de str te gaan
 	cmp al, 0xA     ; kijk of de al 0xA is wat dat is het einde v de str
 	int 0x10    	; dan printen we de str
-	je .done		; jmp naar done als het echt het eind is
-	jmp .repeat     ; en jmp weer lekker verder
+	je .print_string_done		; jmp naar done als het echt het eind is
+	jmp .print_string_repeat     ; en jmp weer lekker verder
 
-.done:
+.print_string_done:
 	ret             ; return(naar je oude positie)
 
 
