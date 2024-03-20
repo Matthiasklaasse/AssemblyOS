@@ -49,10 +49,8 @@ This Python script is responsible for assembling the bootloader code and generat
 
 #### Usage:
 
-1. Ensure you have the necessary assembler tool installed on your system.
-2. Modify the `assemble_bin` function in `assembler.py` to specify the command for assembling your bootloader code.
-3. Run `python assembler.py` to assemble the bootloader code and generate the boot image.
-4. The assembled boot image (`bootimage.iso`) will be saved in the root directory.
+1. Run `python assembler.py` to assemble the bootloader code and generate the boot image.
+2. The assembled boot image (`bootimage.iso`) will be saved in the root directory.
 
 ### `assemble_server.py`
 
