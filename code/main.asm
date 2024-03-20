@@ -21,7 +21,7 @@ start:
 	mov byte [color], 14
 	mov si, text_string ;in si drop je de HEX locatie van de 1ste byte je sting
 	call print_string	; print_string print de str die in si aangewezen word
-	mov byte [color], 14
+	mov byte [color], 1
 	mov si, text_string1
 	call print_string
 
