@@ -14,18 +14,20 @@ start:
 	; dit is de stack space vanaf 0x07C0 tot 0x07C0+288 zit de romvoor de bootloader
 
 	mov ax, 0x07C0
-	mov ds, ax; veel te moeilijk ben nu al vergeten hoe dit werkte was iets met een stack space LIFO etc.
+	mov ds, ax
 	; edit: dit blijkt de stack space te zijn hier slaan we variables zoals [color] in op vanaf 0x07C0 tot 288 verder zit dit in de ram
 
 
-	mov byte [color], 14
+	mov byte [color], 0
 	mov si, text_string ;in si drop je de HEX locatie van de 1ste byte je sting
 	call print_string	; print_string print de str die in si aangewezen word
-	mov byte [color], 1
-	mov si, text_string1
+
+loop:
+	add byte [color],1
+	mov si, text_string
 	call print_string
 
-	jmp $
+	jmp loop
 
 print_string:
 	mov bl, [color]	;laad de kleur van 0x2048 in bl

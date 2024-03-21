@@ -1,5 +1,8 @@
 import os
 
+if not os.path.exists('tmp'):
+    os.makedirs('tmp')
+
 def assemble_bin():
     os.system('tools\\NASM\\nasm.exe -f bin code\\main.asm -o tmp\\boot.img')
 
